@@ -38,8 +38,6 @@ SCM scm_inotify_read(SCM fd) {
 
     int k = read(sti(fd), q, s);
 
-    /* printf("was %d\n", strlen(q->name)); */
-
     SCM f = scm_list_5(
     	cons(sfls("wd"),      sfi(q->wd))
     	,cons(sfls("mask"),   sfui32(q->mask))

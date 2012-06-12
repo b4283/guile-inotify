@@ -5,7 +5,7 @@
 	   inotify-remove-watch
 	   inotify-read
 	   inotify-close
-	   inotify-show-exports))
+	   inotify-show-constants))
 
 (load-extension "guile-inotify-wrapper" "scm_init_wrapper_module")
 (use-modules (linux inotify c-wrapper))
@@ -27,15 +27,20 @@
   (inotify-rw-wrap fd wd))
 
 (define (inotify-read fd)
-  (let ((r (inotify-read-wrap fd)))
-    (display rev-events)))
-    ;; (let q2 ((mask (cdr (assq 'mask r))) (resolved '()))
-
+  (let* ((r (inotify-read-wrap fd)) (rmask (cdr (assq 'mask r))))
+    (let q3 ((test-events inotify-events) (what-happened? '()))
+      (if (null? test-events)
+	  (acons 'what-happened? what-happened? r)
+	  (let* ((flag (car test-events))
+		 (sym (car flag)) (mask (cdr flag)))
+	    (q3 (cdr test-events) (if (logtest mask rmask)
+				      (cons sym what-happened?)
+				      what-happened?)))))))
 
 (define (inotify-close fd)
   (inotify-close-wrap fd))
 
-(define (inotify-show-exports)
+(define (inotify-show-constants)
   (display "inotify-init1-available-flags: ")
   (display inotify-init1-available-flags)
   (newline)
@@ -47,8 +52,8 @@
   (newline))
 
 ;; private part
-(define rev-events
-  (map (lambda (x) (cons (cdr x) (car x))) inotify-events))
+;; (define rev-events
+;;   (map (lambda (x) (cons (cdr x) (car x))) inotify-events))
 
 (define w-module (resolve-module '(linux inotify c-wrapper)))
 
