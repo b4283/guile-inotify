@@ -28,7 +28,9 @@
 
 (define (inotify-read fd)
   (let* ((r (inotify-read-wrap fd)) (rmask (cdr (assq 'mask r))))
-    (let q3 ((test-events inotify-events) (what-happened? '()))
+    (let q3 ((test-events
+	      (append inotify-events inotify-read-additional-masks))
+	     (what-happened? '()))
       (if (null? test-events)
 	  (acons 'what-happened? what-happened? r)
 	  (let* ((flag (car test-events))
@@ -52,8 +54,6 @@
   (newline))
 
 ;; private part
-;; (define rev-events
-;;   (map (lambda (x) (cons (cdr x) (car x))) inotify-events))
 
 (define w-module (resolve-module '(linux inotify c-wrapper)))
 

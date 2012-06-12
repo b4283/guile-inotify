@@ -34,8 +34,10 @@ SCM scm_inotify_rw(SCM fd, SCM wd) {
 
 SCM scm_inotify_read(SCM fd) {
     int s = sizeof(struct inotify_event) + NAME_MAX + 1;
+
     struct inotify_event *q = malloc(s);
 
+    // TODO: use k to return a multiple-value return.
     int k = read(sti(fd), q, s);
 
     SCM f = scm_list_5(
@@ -99,6 +101,14 @@ void init_inotify_module (void* v) {
     		     	     ,cons(sfls("in-onlydir"),     sfui32(IN_ONLYDIR))
     		     	     ,SCM_UNDEFINED))));
 
+    scm_c_define("inotify-read-additional-masks",
+        scm_list_n(
+    	    cons(sfls("in-ignored"),     sfui32(IN_IGNORED))
+    	    ,cons(sfls("in-isdir"),      sfui32(IN_ISDIR))
+    	    ,cons(sfls("in-q-overflow"), sfui32(IN_Q_OVERFLOW))
+    	    ,cons(sfls("in-unmount"),    sfui32(IN_UNMOUNT))
+    	    ,SCM_UNDEFINED));
+
     scm_c_export(
 	// functions
 	"inotify-init-wrap",
@@ -112,6 +122,7 @@ void init_inotify_module (void* v) {
 	"inotify-init1-available-flags",
 	"inotify-add-watch-available-flags",
 	"inotify-events",
+	"inotify-read-additional-masks",
 	NULL);
 }
 
