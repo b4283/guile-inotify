@@ -1,8 +1,24 @@
-A inotify binding for Guile 1.8.
-Guile 2.0 compatibility has been tested.
+A inotify binding for Guile 2.0.
 
-run:
+Update
+------
 
+* 20120616
+  Guile 2.0 compatibility has been tested.
+  Now I'm not sure this module fork work for 1.8   :x
+
+* 201206
+  Finalize version-1 for guile 1.8 completed.
+
+
+Notice
+------
+You should read inotify(7) before using this module for it is
+only a stupid wrapper around the original functions.
+
+
+Trying
+------
 > touch /tmp/b
 > LTDL_LIBRARY_PATH=. guile -L . -s test.scm
 
