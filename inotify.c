@@ -5,7 +5,6 @@
 #include <linux/limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 
 #define sti(X)     scm_to_int(X)
 #define sfls(X)    scm_from_locale_symbol(X)
@@ -45,11 +44,11 @@ SCM scm_inotify_read(SCM fd) {
     	,cons(sfls("mask"),   sfui32(q->mask))
     	,cons(sfls("cookie"), sfui32(q->cookie))
     	,cons(sfls("len"),    sfui32(q->len))
-    	,cons(sfls("name"),   (q->len > 0) ? sfls(q->name) : SCM_UNDEFINED));
+    	,cons(sfls("name"),   (q->len > 0) ? sfls(q->name) : SCM_BOOL_F));
 
     free(q);
 
-    return f;
+    return scm_list_2(f, sfi(k));
 }
 
 SCM scm_inotify_close(SCM fd) {
@@ -126,6 +125,6 @@ void init_inotify_module (void* v) {
 	NULL);
 }
 
-void scm_init_wrapper_module () {
-    scm_c_define_module("linux inotify c-wrapper", init_inotify_module, NULL);
+void scm_init_linux_inotify_cwrapper_module () {
+    scm_c_define_module("linux inotify cwrapper", init_inotify_module, NULL);
 }

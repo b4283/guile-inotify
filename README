@@ -1,1 +1,9 @@
 A inotify binding for Guile 1.8.
+Guile 2.0 compatibility has been tested.
+
+run:
+
+> touch /tmp/b
+> LTDL_LIBRARY_PATH=. guile -L . -s test.scm
+
+and write something to "/tmp/b" to see the program running.
